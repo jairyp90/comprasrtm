@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="personal">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form>
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Personal</f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in" id="panel">
+										<p:row>
+											<p:column colspan="2">
+												<p:outputLabel value="Datos del Personal" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="nombre1" id="mnombre1"/>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Nombre 1" />
+											</p:column>
+											<p:column>
+												<p:inputText id="nombre1" value="#{tpers.personal.plnom1}" size="20" required="true" label="Nombre 1" maxlength="15" >
+													<f:validateLength minimum="1" maximum="15" /> 
+													<p:ajax  event="blur" update="mnombre1"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Nombre 2" />
+											</p:column>
+											<p:column>
+												<p:inputText id="nombre2" value="#{tpers.personal.plnom2}" size="20" maxlength="15" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="apep" id="mapep"/>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Apellido Paterno" />
+											</p:column>
+											<p:column>
+												<p:inputText id="apep" value="#{tpers.personal.plapep}" size="20" required="true" label="Apellido Paterno" maxlength="20" >
+													<f:validateLength minimum="1" maximum="20" /> 
+													<p:ajax  event="blur" update="mapep"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="apem" id="mapem"/>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Apellido Materno" />
+											</p:column>
+											<p:column>
+												<p:inputText id="apem" value="#{tpers.personal.plapem}" size="20" required="true" label="Apellido Materno" maxlength="20" >
+													<f:validateLength minimum="1" maximum="20" /> 
+													<p:ajax  event="blur" update="mapem"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="usua" id="musua"/>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Usuario" />
+											</p:column>
+											<p:column>
+												<p:inputText id="usua" value="#{tpers.personal.plusua}" size="20" required="true" label="Usuario" maxlength="10" >
+													<f:validateLength minimum="1" maximum="10" /> 
+													<p:ajax  event="blur" update="musua"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="area" id="marea"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Área" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="area" required="true" label="Área" filter="true" filterMatchMode="startsWith"
+													value="#{tpers.personal.plarea.tbespe}" style="width:200px;">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{tpers.areaSelector}" />
+													<p:ajax event="change" update="marea" />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="cargo" id="mcargo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Cargo" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="cargo" required="true" label="Cargo" filter="true" filterMatchMode="startsWith"
+													value="#{tpers.personal.plcarg.tbespe}" style="width:200px;">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{tpers.cargoSelector}" />
+													<p:ajax event="change" update="mcargo" />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Jefe" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="jefe" value="#{tpers.personal.pljefe.plcodi}" filter="true" filterMatchMode="startsWith" style="width:200px;" >
+													<f:selectItem itemLabel="Seleccione" itemValue="vacio" />
+													<f:selectItems value="#{tpers.jefeSelector}" />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<center>
+													<p:commandButton value="Guardar" actionListener="#{tpers.guardar}" validateClient="true" update="dlg,panel"/>
+													<p:commandButton value="Cancelar" action="/paginas/mantenerPersonal" actionListener="#{tpers.cargar}"  immediate="true"  />
+												</center>
+												
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg" Height="40" resizable="false" modal="true" showEffect="fade" hideEffect="fade" closable="false">
+   													 <center>
+   													 <p:panelGrid styleClass="table-in" >		
+        												<p:row >
+															<p:column width="200">
+																<center>
+																	<p:outputLabel value="#{tpers.mensaje}"/>
+																</center>	
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<hr></hr>
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column width="200">
+																<center>
+																	<p:commandButton id="btnOK" value="Aceptar" action="/paginas/mantenerPersonal" actionListener="#{tpers.cargar}" rendered="#{!tpers.personal.error}"/>
+																	<p:commandButton id="btnError" value="Aceptar" onclick="PF('dlg').hide();"   rendered="#{tpers.personal.error}"/>
+																</center>
+															</p:column>
+														</p:row>        	
+        											 </p:panelGrid >	
+        											 </center>					 
+												 </p:dialog>
+											</p:column>
+										</p:row>
+										
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>	
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

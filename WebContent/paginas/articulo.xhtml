@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="articulo" >
+								
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form id="articuloi">
+																	
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out" >
+						<f:facet name="header">Artículo</f:facet>
+									
+									<p:panelGrid columns="2" styleClass="table-in-center" >
+									
+									<p:panelGrid styleClass="table-in-center" id="panel" >
+										<p:row >
+											<p:column colspan="4"  >
+												<p:outputLabel value="Datos del Artículo" styleClass="subtitulo" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="4">
+												<p:message for="descripcion" id="mdescripcion"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Descripción" />
+											</p:column>
+											
+											<p:column colspan="3">
+												<p:inputText id="descripcion" value="#{tarti.articulo.artdes}" size="90"  label="Descripción" required="true" maxlength="50">
+													<f:validateLength minimum="1" maximum="50" /> 
+													<p:ajax  event="blur" update="mdescripcion"  /> 
+												</p:inputText>
+											</p:column>
+																															
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:outputLabel value="Datos del tipo" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:message for="tipo" id="mtipo" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Código" />
+											</p:column>
+											
+											<p:column style="width: 87px;"  >
+												<p:inputText id="tipo" value="#{tarti.articulo.arttip.tbespe}" size="8" disabled="false" label="Tipo" required="true" maxlength="6" immediate="false" onkeypress="if (event.keyCode == 13) {onchange(); return false;}"  >
+													<f:validateLength minimum="6" maximum="6" />
+													<p:ajax  event="change" update="destipo,mtipo" listener="#{tarti.buscarTipo}"  />  
+												</p:inputText>
+											</p:column>
+											
+											<p:column >
+												<p:inputText id="destipo" size="54" readonly="true" value="#{tarti.articulo.arttip.desesp}" />
+											</p:column>
+																										
+											<p:column>
+												<p:commandButton icon="ui-icon-search" action="#{ttabd.showBuscar('buscarCatalogo','Tipo','TIPOS')}" title="Buscar" immediate="true" >
+													<p:ajax event="dialogReturn" listener="#{tarti.handleReturn}" update="tipo,destipo,mtipo"/>
+												</p:commandButton>
+												<p:commandButton icon="ui-icon-pencil" action="/paginas/mantenerCatalogo" actionListener='#{ttabd.cargar("TIPOS","Tipo")}' title="Mantener" immediate="true"/>
+											</p:column>
+																						
+										</p:row>
+																				
+										<p:row>
+											<p:column colspan="4">
+												<p:outputLabel value="Datos de la unidad de medida" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:message for="medida" id="mmedida" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Código" />
+											</p:column>
+											<p:column >
+												<p:inputText id="medida" value="#{tarti.articulo.artmed.tbespe}" size="8" disabled="false" label="Medida" required="true" maxlength="6" immediate="false" onkeypress="if (event.keyCode == 13) {onchange(); return false;}" >
+													<f:validateLength minimum="6" maximum="6" />
+													<p:ajax event="change" update="desmedida,mmedida" listener="#{tarti.buscarMedida}" /> 
+												</p:inputText>
+												
+											</p:column>
+											
+											<p:column >
+												<p:inputText id="desmedida" size="54" readonly="true" value="#{tarti.articulo.artmed.desesp}" />
+											</p:column>
+											
+											<p:column>
+												<p:commandButton icon="ui-icon-search" actionListener="#{ttabd.showBuscar('buscarCatalogo','Medida','UGMED')}" title="Buscar" immediate="true" >
+													<p:ajax event="dialogReturn" listener="#{tarti.handleReturn}" update="medida,desmedida,mmedida"/>
+												</p:commandButton>
+												<p:commandButton icon="ui-icon-pencil" action="/paginas/mantenerCatalogo" actionListener='#{ttabd.cargar("UGMED","Unidad de Medida")}' title="Mantener" immediate="true"/>
+											</p:column>
+																					
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:outputLabel value="Datos de la marca" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:message for="marca" id="mmarca" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Código" />
+											</p:column>
+											<p:column > 
+												<p:inputText id="marca" value="#{tarti.articulo.artmar.tbespe}" size="8" disabled="false" label="Marca" required="true" maxlength="6" immediate="false" onkeypress="if (event.keyCode == 13) {onchange(); return false;}" >
+													<f:validateLength minimum="6" maximum="6" />
+													<p:ajax event="change" update="desmarca,mmarca" listener="#{tarti.buscarMarca}"/>  
+												</p:inputText>
+												
+											</p:column>
+											
+											<p:column >
+												<p:inputText id="desmarca" size="54" readonly="true" value="#{tarti.articulo.artmar.desesp}" />
+											</p:column>
+											
+											<p:column>
+												<p:commandButton icon="ui-icon-search" action="#{ttabd.showBuscar('buscarCatalogo','Marca','MARCA')}" title="Buscar" immediate="true" >
+													<p:ajax event="dialogReturn" listener="#{tarti.handleReturn}" update="marca,desmarca,mmarca"/>
+												</p:commandButton>
+												<p:commandButton icon="ui-icon-pencil" action="/paginas/mantenerCatalogo" actionListener='#{ttabd.cargar("MARCA","Marca")}' title="Mantener" immediate="true" />
+											</p:column>										
+						
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="4">
+												<p:outputLabel value="Datos del modelo" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="4">
+												<p:message for="modelo" id="mmodelo" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Código" />
+											</p:column>
+											<p:column >
+												<p:inputText id="modelo" value="#{tarti.articulo.artmod.tbespe}" size="8" disabled="false" label="Modelo" required="true" maxlength="6" immediate="false" onkeypress="if (event.keyCode == 13) {onchange(); return false;}">
+													<f:validateLength minimum="6" maximum="6" />
+													<p:ajax event="change" update="desmodelo,mmodelo" listener="#{tarti.buscarModelo}"/> 
+												</p:inputText>
+												
+											</p:column>
+											
+											<p:column >
+												<p:inputText id="desmodelo" size="54" readonly="true" value="#{tarti.articulo.artmod.desesp}" />
+											</p:column>
+											
+											<p:column>
+												
+												<p:commandButton icon="ui-icon-search" action="#{ttabd.showBuscar('buscarCatalogo','Modelo','MODEL')}" title="Buscar" immediate="true" >
+													<p:ajax event="dialogReturn" listener="#{tarti.handleReturn}" update="modelo,desmodelo,mmodelo"/>
+												</p:commandButton>
+												<p:commandButton icon="ui-icon-pencil" action="/paginas/mantenerCatalogo" actionListener='#{ttabd.cargar("MODEL","Modelo")}' title="Mantener" immediate="true"/>
+											</p:column>
+										</p:row>
+																										
+										<p:row>
+											<p:column colspan="4" >
+												<center >
+													<p:commandButton value="Guardar" actionListener="#{tarti.guardar}" validateClient="true" update="dlg,panel"/>
+													<p:commandButton value="Cancelar" action="/paginas/mantenerArticulo" actionListener="#{tarti.cargar}" immediate="true"  />
+												</center>
+												
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg" Height="40" resizable="false" modal="true" showEffect="fade" hideEffect="fade" closable="false">
+   													 <center>
+   													 <p:panelGrid styleClass="table-in" >		
+        												<p:row >
+															<p:column width="200">
+																<center>
+																	<p:outputLabel value="#{tarti.mensaje}"/>
+																</center>	
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<hr></hr>
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column width="200">
+																<center>
+																	<p:commandButton id="btnOK" value="Aceptar" action="/paginas/mantenerArticulo" actionListener="#{tarti.cargar}"  rendered="#{!tarti.articulo.error}"/>
+																	<p:commandButton id="btnError" value="Aceptar" onclick="PF('dlg').hide();"   rendered="#{tarti.articulo.error}"/>
+																</center>
+															</p:column>
+														</p:row>        	
+        											  </p:panelGrid >
+        											  </center>						 
+												</p:dialog>
+												
+											</p:column>
+										</p:row>
+									</p:panelGrid>									
+								
+								
+	
+				
+				
+								<p:panelGrid styleClass="table-in" id="panelI">
+									<p:row>
+										<p:column> 
+											<p:fileUpload  fileUploadListener="#{tarti.upload}" update="image" mode="advanced" auto="true" label="Buscar Imagen" sizeLimit="524288" allowTypes="/(\.|\/)(gif|jpg|jpeg|png)$/" invalidSizeMessage="Tamaño invalido (500 kb max)" invalidFileMessage="Solo se permiten los formatos (gif,jpg,jpeg y png)" previewWidth="100"  /> 
+										</p:column>  
+									</p:row>
+									<p:row>
+										<p:column>
+											<p:graphicImage id="image" width="250" height="210" value="#{tarti.imagen}" cache="false"  />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+								
+								</p:panelGrid>
+					
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration 
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="com.rtm.compras.model.TARTI" alias="TARTI"/>		
+		<typeAlias type="com.rtm.compras.model.TTABD" alias="TTABD"/>	
+		<typeAlias type="com.rtm.compras.model.TPROV" alias="TPROV"/>
+		<typeAlias type="com.rtm.compras.model.TPERS" alias="TPERS"/>
+		<typeAlias type="com.rtm.compras.model.TSOLI" alias="TSOLI"/>	
+		<typeAlias type="com.rtm.compras.model.TSOLID" alias="TSOLID"/>	
+		<typeAlias type="com.rtm.compras.model.TPEPE" alias="TPEPE"/>
+		<typeAlias type="com.rtm.compras.model.TUSUA" alias="TUSUA"/>	
+	</typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.postgresql.Driver"/>
+                <property name="url" value="jdbc:postgresql://localhost:5432/ComprasBD"/>
+                <property name="username" value="postgres"/>
+                <property name="password" value="C2rb2r4$"/>
+            </dataSource>       
+        </environment>
+    </environments>
+    
+    <mappers>
+		<package name="com/rtm/dao/mybatis/mapper"/>
+    </mappers>
+</configuration>

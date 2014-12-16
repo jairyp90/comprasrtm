@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rtm.dao.mybatis.mapper.ProveedorMapper">
+
+	<resultMap type="TPROV" id="rmTPROVModel">
+		<id column="PROCVE" property="procve" />
+		<result column="PRORUC" property="proruc" />
+		<result column="PRONOM" property="pronom" />
+		<result column="PRODIR" property="prodir" />
+		<result column="PROTE1" property="prote1" />
+		<result column="PROTE2" property="prote2" />
+		<result column="PRMAIL" property="prmail" />
+		<result column="PRUSIN" property="prusin" />
+		<result column="PRFEIN" property="prfein" />
+		<result column="PRUSMD" property="prusmd" />
+		<result column="PRFEMD" property="prfemd" />
+	</resultMap>
+
+	<select id="buscarProveedores" resultMap="rmTPROVModel">
+		select * from TPROV
+		<where>
+			<if test="procve != null">
+				AND UPPER(procve) like #{procve}
+			</if>
+			<if test="pronom != null">
+				AND UPPER(pronom) like #{pronom}
+			</if>
+		</where>
+		order by procve
+	</select>
+</mapper>

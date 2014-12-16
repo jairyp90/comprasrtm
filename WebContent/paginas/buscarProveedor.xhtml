@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><h:outputText value="Buscar Proveedor" /></title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="buscarProveedor">
+		<p:panelGrid styleClass="table-in" id="pnlBuscarProveedor">
+			<p:row>
+				<p:column colspan="3">
+					<p:outputLabel value="Criterios de Busqueda" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel value="RUC" />
+				</p:column>
+				<p:column colspan="2">
+					<p:outputLabel value="Descripción" />
+				</p:column>
+			</p:row>
+
+
+
+			<p:row>
+				<p:column>
+					<p:inputText id="txtCodigo" value="#{tprov.bproveedor.procve}"
+						size="10" maxlength="11"/>
+				</p:column>
+				<p:column>
+					<p:inputText id="txtDescripcion" value="#{tprov.bproveedor.pronom}"
+						size="60" maxlength="50"/>
+				</p:column>
+				<p:column>
+					<p:commandButton id="btnBuscar" value="Buscar"
+						actionListener="#{tprov.buscar}" update="tbProveedor" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column colspan="3">
+					<p:dataTable id="tbProveedor" var="proveedor"
+						value="#{tprov.proveedores}" paginator="true" rows="10"
+						rowsPerPageTemplate="10,15,20" rowKey="#{proveedor.procve}" 
+						selection="#{tprov.proveedor}" >
+						<p:column headerText="RUC" sortBy="#{proveedor.procve}"
+							width="60">
+							<h:outputText value="#{proveedor.procve}" />
+						</p:column>
+						<p:column headerText="Descripción" sortBy="#{proveedor.pronom}"
+							width="250">
+							<h:outputText value="#{proveedor.pronom}" />
+						</p:column>
+						<p:column selectionMode="single" headerText="Seleccione" width="60" style="text-align: center"/>
+					</p:dataTable>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column colspan="3" style="text-align: center;">
+					<p:commandButton value="Aceptar" id="btnAceptar"
+						actionListener="#{tprov.aceptar}" />
+					<p:commandButton value="Cancelar" id="btnCancelar"
+						actionListener="#{tprov.closeBuscar}" immediate="true" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+	</h:form>
+</h:body>
+</html>

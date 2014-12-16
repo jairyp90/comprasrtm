@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rtm.dao.mybatis.mapper.CatalogoMapper">
+
+	<resultMap type="TTABD" id="rmTTABDModel">
+		<id column="TBIDEN" property="tbiden" />
+		<id column="TBESPE" property="tbespe" />
+		<result column="DESESP" property="desesp" />
+		<result column="TBUSIN" property="tbusin" />
+		<result column="TBFEIN" property="tbfein" />
+		<result column="TBUSMD" property="tbusmd" />
+		<result column="TBFEMD" property="tbfemd" />
+	</resultMap>
+
+	<insert id="registrar">
+		<selectKey keyProperty="tbespe" resultType="String" order="BEFORE">
+			select right('00000' || nextval('catalogo_id'),6)
+		</selectKey>
+		insert into TTABD(tbiden,tbespe,desesp,tbusin)
+		values
+		(#{tbiden},#{tbespe},#{desesp},#{tbusin})
+	</insert>
+	
+	<insert id="registrarReferencias">
+		  update TTABD set tbusmd=#{tbusmd},tbfemd=#{tbfemd} where tbiden=#{tbiden} and tbespe=#{tbespe} and tbref1='';
+		  delete from TTABD where tbiden=#{tbiden} and tbespe=#{tbespe} and tbref1!='';
+  		  <foreach item="obj" collection="detalles"    >
+  		  insert into TTABD(tbiden,tbespe,desesp,tbusin,tbref1,tbref2) values (#{tbiden}, #{tbespe}, #{desesp}, #{tbusin},#{obj.tbespe},#{obj.desesp});
+  		  </foreach>	
+  		  
+	</insert>
+
+	<select id="buscarCatalogos" resultMap="rmTTABDModel">
+		SELECT * FROM TTABD
+		<where>
+			<if test="tbiden != null">
+				AND tbiden = #{tbiden} and tbref1=''
+			</if>
+			<if test="tbespe != null">
+				AND UPPER(tbespe) like #{tbespe} and tbref1=''
+			</if>
+			<if test="desesp != null">
+				AND UPPER(desesp) like #{desesp} and tbref1=''
+			</if>
+		</where>
+	</select>
+
+	<select id="countReferences" parameterType="TTABD" resultType="INTEGER">
+		<if test="tbiden=='UGMED'">
+			select count(*) from tarti where artmed=#{tbespe}
+		</if>
+		<if test="tbiden=='MODEL'">
+			select count(*) from tarti where artmod=#{tbespe}
+		</if>
+		<if test="tbiden=='MARCA'">
+			select count(*) from tarti where artmar=#{tbespe}
+		</if>
+		<if test="tbiden=='TIPOS'">
+			select count(*) from tarti where arttip=#{tbespe}
+		</if>
+		<if test="tbiden=='AREAS'">
+			select count(*) from tpers where plarea=#{tbespe}
+		</if>
+		<if test="tbiden=='CARGO'">
+			select count(*) from tpers where plcarg=#{tbespe}
+		</if>
+	</select>
+
+</mapper>

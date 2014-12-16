@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="solicitud">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form>
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Solicitud</f:facet>
+
+						<p:row>
+							<p:column>
+								<p:toolbar>
+									<f:facet name="left">
+										<p:commandButton action="#{tsoli.grabar}"
+											validateClient="true" update="panel1,dlg,panel6"
+											icon="ui-icon-disk" title="Grabar" />
+										<p:commandButton action="/paginas/gestionSolicitud"
+											actionListener='#{tsoli.cargar()}' immediate="true"
+											icon="ui-icon-closethick" title="Cancelar" />
+										<p:dialog id="dlg" header="Mensaje del Sistema"
+											widgetVar="dlg" Height="40" resizable="false" modal="true"
+											showEffect="fade" hideEffect="fade" closable="false">
+											<center>
+												<p:panelGrid styleClass="table-in">
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:outputLabel value="#{tsoli.mensaje}" />
+															</center>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column>
+															<hr></hr>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:commandButton id="btnOK" value="Aceptar"
+																	action="/paginas/gestionSolicitud"
+																	actionListener='#{tsoli.cargar()}'
+																	rendered="#{!tsoli.error}" />
+																<p:commandButton id="btnError" value="Aceptar"
+																	onclick="PF('dlg').hide();" rendered="#{tsoli.error}" />
+															</center>
+														</p:column>
+													</p:row>
+												</p:panelGrid>
+											</center>
+										</p:dialog>
+									</f:facet>
+								</p:toolbar>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<center>
+
+									<p:panelGrid styleClass="table-in" id="panel1">
+
+										<p:row>
+											<p:column colspan="5">
+												<p:outputLabel value="Datos de la Solicitud"
+													styleClass="subtitulo" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="5">
+												<p:message for="slmoti" id="mslmoti" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Motivo" />
+											</p:column>
+											<p:column colspan="4">
+												<p:inputText id="slmoti" value="#{tsoli.solicitud.slmoti}"
+													size="60" label="Motivo" required="true" maxlength="100"
+													rendered="#{tsoli.situacion eq '01'}">
+													<f:validateLength minimum="1" maximum="100" />
+													<p:ajax event="blur" update="mslmoti" />
+												</p:inputText>
+
+												<p:inputText id="slmotiE" value="#{tsoli.solicitud.slmoti}"
+													size="60" readonly="true"
+													rendered="#{tsoli.situacion eq '02'}" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="5">
+												<p:message for="slloca" id="mslloca" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="5">
+												<p:message for="slplaz" id="mslplaz" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Local" />
+											</p:column>
+											<p:column colspan="2">
+												<p:selectOneMenu id="slloca" required="true" label="Local"
+													value="#{tsoli.solicitud.slloca}" style="width:135px;"
+													rendered="#{tsoli.situacion eq '01'}">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItem itemLabel="ABTAO" itemValue="ABTAO" />
+													<f:selectItem itemLabel="ARRIOLA" itemValue="ARRIOLA" />
+													<f:selectItem itemLabel="ATE" itemValue="ATE" />
+													<f:selectItem itemLabel="BRILLANTES" itemValue="BRILLANTES" />
+													<f:selectItem itemLabel="IQUITOS" itemValue="IQUITOS" />
+													<f:selectItem itemLabel="MIRAFLORES" itemValue="MIRAFLORES" />
+													<p:ajax event="change" update="mslloca" />
+												</p:selectOneMenu>
+
+												<p:inputText id="sllocaE" value="#{tsoli.solicitud.slloca}"
+													size="22" readonly="true"
+													rendered="#{tsoli.situacion eq '02'}" />
+											</p:column>
+
+											<p:column>
+												<p:outputLabel value="Plazo" />
+											</p:column>
+											<p:column>
+												<p:calendar id="slplaz" value="#{tsoli.solicitud.slplaz}"
+													rendered="#{tsoli.situacion eq '01'}" pattern="dd/MM/yyyy"
+													navigator="true" size="17" required="true" label="Plazo"
+													maxlength="10" mindate="#{tsoli.minDate}">
+													<p:ajax event="dateSelect" update="mslplaz" />
+												</p:calendar>
+
+												<p:calendar id="slplazE" value="#{tsoli.solicitud.slplaz}"
+													size="17" readonly="true" pattern="dd/MM/yyyy"
+													rendered="#{tsoli.situacion eq '02'}"
+													mindate="#{tsoli.solicitud.slplaz}"
+													maxdate="#{tsoli.solicitud.slplaz}" />
+
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="5">
+												<p:outputLabel value="Datos del Solicitante"
+													styleClass="subtitulo" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Solicitante" />
+											</p:column>
+											<p:column colspan="4">
+												<p:inputText id="slpers"
+													value="#{tsoli.solicitud.slpers.plnom1} #{tsoli.solicitud.slpers.plnom2} #{tsoli.solicitud.slpers.plapep} #{tsoli.solicitud.slpers.plapem}"
+													size="60" readonly="true" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Area" />
+											</p:column>
+											<p:column colspan="2">
+												<p:inputText id="plarea"
+													value="#{tsoli.solicitud.slpers.plarea.desesp}" size="22"
+													readonly="true" />
+											</p:column>
+											<p:column>
+												<p:outputLabel value="Cargo" />
+											</p:column>
+											<p:column>
+												<p:inputText id="plsare"
+													value="#{tsoli.solicitud.slpers.plcarg.desesp}" size="17"
+													readonly="true" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid columns="2" styleClass="table-in-center"
+										id="panelg">
+
+										<p:panelGrid styleClass="table-in-center" id="panel2"
+											rendered="#{tsoli.situacion eq '01'}">
+											<p:row>
+												<p:column colspan="6">
+													<p:outputLabel value="Datos del Artículo"
+														styleClass="subtitulo" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column>
+													<p:outputLabel value="Código" />
+												</p:column>
+												<p:column>
+													<p:inputText id="artcod"
+														value="#{tsoli.detalle.sdarti.artcod}" size="10"
+														maxlength="10"
+														onkeypress="if (event.keyCode == 13) {onchange(); return false;}">
+														<p:ajax event="change" listener="#{tsoli.buscarArticulo}"
+															update="artdes,arttip,artmed,artmar,artmod,panelI" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:outputLabel value="Descripción" />
+												</p:column>
+												<p:column>
+													<p:inputText id="artdes"
+														value="#{tsoli.detalle.sdarti.artdes}" readonly="true" />
+												</p:column>
+												<p:column>
+													<p:outputLabel value="Tipo" />
+												</p:column>
+												<p:column>
+													<p:inputText id="arttip"
+														value="#{tsoli.detalle.sdarti.arttip.desesp}"
+														readonly="true" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column>
+													<p:outputLabel value="U.Med." />
+												</p:column>
+												<p:column>
+													<p:inputText id="artmed"
+														value="#{tsoli.detalle.sdarti.artmed.desesp}" size="10"
+														readonly="true" />
+												</p:column>
+												<p:column>
+													<p:outputLabel value="Marca" />
+												</p:column>
+												<p:column>
+													<p:inputText id="artmar"
+														value="#{tsoli.detalle.sdarti.artmar.desesp}"
+														readonly="true" />
+												</p:column>
+												<p:column>
+													<p:outputLabel value="Modelo" />
+												</p:column>
+												<p:column>
+													<p:inputText id="artmod"
+														value="#{tsoli.detalle.sdarti.artmod.desesp}"
+														readonly="true" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column colspan="6">
+													<p:message for="sdcant" id="msdcant" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column>
+													<p:outputLabel value="Canti." />
+												</p:column>
+												<p:column>
+													<p:inputText id="sdcant" value="#{tsoli.detalle.sdcant}"
+														size="10" required="true" label="Cantidad"
+														validatorMessage="Cantidad: cantidad minima mayor a 0">
+														<f:validateLongRange minimum="1" />
+														<p:ajax event="blur" update="msdcant" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:outputLabel value="Observación" />
+												</p:column>
+												<p:column colspan="3">
+													<p:inputText id="sdobse" value="#{tsoli.detalle.sdobse}"
+														size="50" maxlength="100" />
+													<p:outputLabel value="  " />
+													<p:commandButton icon="ui-icon-search"
+														action="#{tarti.showBuscar('buscarArticulo')}"
+														title="Buscar" immediate="true">
+														<p:ajax event="dialogReturn"
+															listener="#{tsoli.handleReturnArticulo}"
+															update="artcod,artdes,arttip,artmar,artmed,artmod,panelI" />
+													</p:commandButton>
+													<p:commandButton icon="ui-icon-pencil" title="Mantener"
+														action="/paginas/mantenerArticulo"
+														actionListener="#{tarti.cargar}" immediate="true" />
+												</p:column>
+											</p:row>
+
+										</p:panelGrid>
+
+										<p:panelGrid id="panelI" rendered="#{tsoli.situacion eq '01'}">
+											<p:row>
+												<p:column>
+													<p:graphicImage id="image" width="110" height="110"
+														cache="false" value="#{tsoli.imagen}" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+
+										<p:panelGrid styleClass="table-in-center" id="panel3"
+											rendered="#{tsoli.situacion eq '01'}">
+
+											<p:row>
+												<p:column colspan="5">
+													<p:outputLabel value="Datos del Proveedor"
+														styleClass="subtitulo" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column colspan="5">
+													<p:message for="procve" id="mprocve" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column>
+													<p:outputLabel value="Código" />
+												</p:column>
+
+												<p:column>
+													<p:inputText id="procve"
+														value="#{tsoli.detalle.sdprov.procve}" size="10"
+														maxlength="11" label="Código"
+														validatorMessage="Ingrese un valor valido de 11 digitos"
+														onkeypress="if (event.keyCode == 13) {onchange(); return false;}">
+														<f:validateLength minimum="11" />
+														<f:validateRegex pattern="^[0-9]+$" />
+														<p:ajax event="change" listener="#{tsoli.buscarProveedor}"
+															update="pronom,mprocve" />
+													</p:inputText>
+												</p:column>
+
+												<p:column>
+													<p:outputLabel value="Razon Social" />
+												</p:column>
+												<p:column>
+													<p:inputText id="pronom"
+														value="#{tsoli.detalle.sdprov.pronom}" size="49"
+														readonly="true" />
+													<p:outputLabel value="  " />
+													<p:commandButton icon="ui-icon-search"
+														action="#{tprov.showBuscar('buscarProveedor')}"
+														title="Buscar" immediate="true">
+														<p:ajax event="dialogReturn"
+															listener="#{tsoli.handleReturnProveedor}"
+															update="procve,pronom" />
+													</p:commandButton>
+													<p:commandButton icon="ui-icon-pencil" title="Mantener"
+														action="/paginas/mantenerProveedor"
+														actionListener="#{tprov.cargar}" immediate="true" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column colspan="6">
+													<p:commandButton value="Agregar" action="#{tsoli.agregar}"
+														update="panel1,panel2,panel3,panel5,dlg,panelI" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panelGrid>
+
+
+
+									<p:panelGrid styleClass="table-in" id="panel5">
+										<p:row>
+											<p:column>
+												<div class="responsiveI">
+													<p:dataTable id="detalle" var="detalle" 
+														value="#{tsoli.detalles}" scrollable="true" >
+														<f:facet name="header">Detalle de la Solicitud</f:facet>
+
+														<p:column headerText="Quitar" width="40"
+															rendered="#{tsoli.situacion eq '01'}">
+															<p:commandButton id="Eliminar" icon="ui-icon-closethick"
+																action="#{tsoli.quitar(detalle)}" update="detalle"
+																style="height:20px;" />
+														</p:column>
+														
+														<p:column headerText="Modificar"  width="45" rendered="#{tsoli.situacion eq '01'}" > 
+															<p:commandButton id="modificar" icon="ui-icon-pencil"	actionListener="#{tsoli.modificarDetalle}" 	update="detalle" 	rendered="#{tsoli.flagDetalle}" 	style="height:20px;" />
+															<p:commandButton id="guardar" 	icon="ui-icon-disk" 	actionListener="#{tsoli.guardarDetalle}" 	update="detalle"	rendered="#{!tsoli.flagDetalle}" 	style="height:20px;" />
+														</p:column>
+														
+														<p:column headerText="Cod.Artículo" width="60">
+															<h:outputText value="#{detalle.sdarti.artcod}" />
+														</p:column>
+														<p:column headerText="Descripción" width="300">
+															<h:outputText value="#{detalle.sdarti.artdes}" />
+														</p:column>
+														<p:column headerText="Cantidad" width="50">
+															<h:outputText value="#{detalle.sdcant}" rendered="#{tsoli.flagDetalle}" />
+															<p:inputText value="#{detalle.sdcant}" rendered="#{!tsoli.flagDetalle}" size="5" />
+														</p:column>
+														<p:column headerText="Motivo" width="600">
+															<h:outputText value="#{detalle.sdobse}" rendered="#{tsoli.flagDetalle}"  />
+															<p:inputText value="#{detalle.sdobse}" rendered="#{!tsoli.flagDetalle}" size="100" />
+														</p:column>
+														<p:column headerText="Proveedor" width="300">
+															<h:outputText value="#{detalle.sdprov.pronom}" />
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<br />
+
+									<p:panelGrid id="panel6">
+
+										<p:row
+											rendered="#{tsoli.situacion eq '02' or tsoli.solicitud.slobse.length() > 0 }">
+											<p:column colspan="2">
+												<p:outputLabel value="Datos de la Evaluación"
+													styleClass="subtitulo" />
+											</p:column>
+										</p:row>
+
+										<p:row
+											rendered="#{tsoli.situacion eq '02' or tsoli.solicitud.slobse.length() > 0 }">
+											<p:column>
+												<p:outputLabel value="Observaciones:" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea rows="3" cols="55" maxlength="200"
+													value="#{tsoli.solicitud.slobse}" />
+											</p:column>
+										</p:row>
+
+										<p:row rendered="#{tsoli.situacion eq '02'}">
+											<p:column colspan="2">
+												<p:message for="slsitu" id="mslsitu" />
+											</p:column>
+										</p:row>
+
+										<p:row rendered="#{tsoli.situacion eq '02'}">
+											<p:column colspan="2">
+												<p:selectOneRadio id="slsitu"
+													value="#{tsoli.solicitud.slsitu.tbespe}" required="true"
+													label="Situación">
+													<f:selectItem itemLabel="Aprobar" itemValue="03" />
+													<f:selectItem itemLabel="Denegar" itemValue="04" />
+													<p:ajax event="change" update="mslsitu" />
+												</p:selectOneRadio>
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+
+
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

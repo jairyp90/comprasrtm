@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="proveedor">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form>
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Proveedor</f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in" id="panel">
+
+										<p:row>
+											<p:column colspan="2">
+												<p:outputLabel value="Datos del Proveedor" styleClass="subtitulo"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="ruc" id="mruc"/>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column >
+												<p:outputLabel value="RUC" />
+											</p:column>
+											<p:column>
+												<p:inputText id="ruc" value="#{tprov.proveedor.proruc}" size="12" required="true" label="RUC" maxlength="11" validatorMessage="RUC: Solo se permiten números (min/max 11 digitos)" >
+													<f:validateLength minimum="11" maximum="11" /> 
+													<f:validateRegex pattern="^[0-9]+$" />
+													<p:ajax  event="blur" update="mruc"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="nombre" id="mnombre"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Nombre" />
+											</p:column>
+											<p:column>
+												<p:inputText id="nombre" value="#{tprov.proveedor.pronom}" size="50" required="true" label="Nombre" maxlength="50">
+													<f:validateLength minimum="1" maximum="50" /> 
+													<p:ajax  event="blur" update="mnombre"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Dirección" />
+											</p:column>
+											<p:column>
+												<p:inputText id="direccion" value="#{tprov.proveedor.prodir}" size="50" maxlength="100" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="telefono1" id="mtelefono1"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Teléfono 1" />
+											</p:column>
+											<p:column>
+												<p:inputText id="telefono1" value="#{tprov.proveedor.prote1}" size="12" maxlength="15" validatorMessage="Telefono 1: Solo se permiten números">
+													<f:validateRegex pattern="^[0-9]+$" />
+													<p:ajax  event="blur" update="mtelefono1"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="telefono2" id="mtelefono2" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Teléfono 2" />
+											</p:column>
+											<p:column>
+												<p:inputText id="telefono2" value="#{tprov.proveedor.prote2}" size="12" maxlength="15" validatorMessage="Telefono 2: Solo se permiten números">
+													<f:validateRegex pattern="^[0-9]+$" />
+													<p:ajax  event="blur" update="mtelefono2"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="correo" id="mcorreo" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Correo" />
+											</p:column>
+											<p:column>
+												<p:inputText id="correo" value="#{tprov.proveedor.prmail}" size="50" maxlength="50" validatorMessage="Correo: Formato de correo invalido" placeholder="alguien@example.com" >
+													<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+													<p:ajax  event="blur" update="mcorreo"  />
+												</p:inputText>
+											</p:column>
+										</p:row>
+																				
+										<p:row>
+											<p:column colspan="2">
+												<center>
+													<p:commandButton value="Guardar" actionListener="#{tprov.guardar}" validateClient="true" update="dlg,panel"/>
+													<p:commandButton value="Cancelar" action="/paginas/mantenerProveedor" actionListener="#{tprov.cargar}"  immediate="true"  />
+												</center>
+												
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg" Height="40" resizable="false" modal="true" showEffect="fade" hideEffect="fade" closable="false">
+   													 <center>
+   													 <p:panelGrid styleClass="table-in" >		
+        												<p:row >
+															<p:column width="200">
+																<center>
+																	<p:outputLabel value="#{tprov.mensaje}"/>
+																</center>	
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<hr></hr>
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column width="200">
+																<center>
+																	<p:commandButton id="btnOK" value="Aceptar" action="/paginas/mantenerProveedor" actionListener="#{tprov.cargar}" rendered="#{!tprov.proveedor.error}"/>
+																	<p:commandButton id="btnError" value="Aceptar" onclick="PF('dlg').hide();"   rendered="#{tprov.proveedor.error}"/>
+																</center>
+															</p:column>
+														</p:row>        	
+        											 </p:panelGrid >	
+        											 </center>					 
+												 </p:dialog>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

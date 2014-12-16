@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.rtm.dao.mybatis.mapper.SolicitudMapper">
+ 
+ <resultMap type="TSOLI" id="rmTSOLIModel">
+   		<id column="slnume" property="slnume"/>
+        <result column="slpers" property="slpers.plcodi"/>
+        <result column="plnom1" property="slpers.plnom1"/>
+        <result column="plnom2" property="slpers.plnom2"/>
+        <result column="plapep" property="slpers.plapep"/>
+        <result column="plapem" property="slpers.plapem"/>
+        <result column="pljefe" property="slpers.pljefe.plcodi"/>
+        <result column="desare" property="slpers.plarea.desesp"/>
+        <result column="descar" property="slpers.plcarg.desesp"/>
+        <result column="slloca" property="slloca"/>
+        <result column="slplaz" property="slplaz"/>
+        <result column="slsitu" property="slsitu.tbespe"/>
+        <result column="desitu" property="slsitu.desesp"/>
+        <result column="slmoti" property="slmoti"/>
+        <result column="slobse" property="slobse"/>
+        <result column="slusin" property="slusin"/> 
+        <result column="slfein" property="slfein"/> 
+        <result column="slusmd" property="slusmd"/> 
+        <result column="slfemd" property="slfemd"/> 
+        <collection property="detalle" ofType="TSOLID" resultMap="rmTSOLIDModel" />
+  </resultMap>
+  
+  <resultMap type="TSOLID" id="rmTSOLIDModel">
+  		<result column="sdnume" property="sdnume.slnume"/>
+        <result column="sdarti" property="sdarti.artcod"/>
+        <result column="artdes" property="sdarti.artdes"/>
+        <result column="desmar" property="sdarti.artmar.desesp"/>
+        <result column="desmod" property="sdarti.artmod.desesp"/> 
+        <result column="desmed" property="sdarti.artmed.desesp"/>
+        <result column="destip" property="sdarti.arttip.desesp"/> 
+        <result column="sdcant" property="sdcant"/>
+        <result column="sdobse" property="sdobse"/>
+        <result column="sdprov" property="sdprov.procve"/>
+        <result column="pronom" property="sdprov.pronom"/>
+        <result column="prmail" property="sdprov.prmail"/>
+  </resultMap>
+  
+  <select id="listarSolicitud" resultMap="rmTSOLIModel" parameterType="String"   >
+	select slnume,slpers,plnom1,plnom2,plapep,plapem,pljefe,a.desesp desare,s.desesp descar,slloca,slplaz,slsitu,st.desesp desitu,slmoti,slusin,slfein,slusmd,slfemd,slobse  
+	from tsoli 
+	inner join tpers on slpers=plcodi 
+	inner join ttabd a on a.tbiden='AREAS' and a.tbespe=plarea 
+	inner join ttabd s on s.tbiden='CARGO' and s.tbespe=plcarg 
+	left join ttabd as st on st.tbiden='TSOLI' and st.tbespe=slsitu 
+	<where>
+  		 <if test="slsitu.tbespe == '01' ">
+   	 		and slsitu in ('01','04') and (pljefe=#{slpers.plcodi} or slpers=#{slpers.plcodi})
+  		 </if>
+  		 <if test="slsitu.tbespe == '02' ">
+   	 		and slsitu = #{slsitu.tbespe} and (pljefe=#{slpers.plcodi} or slpers=#{slpers.plcodi})
+  		 </if>
+  		 <if test="slsitu.tbespe == '00' ">
+   	 		and (pljefe=#{slpers.plcodi} or slpers=#{slpers.plcodi}) and slsitu not in ('16') 
+  		 </if>
+  		 <if test="slsitu.tbespe == '03' ">
+   	 		and slsitu = #{slsitu.tbespe}
+  		 </if>
+  		  <if test="slsitu.tbespe == '05' ">
+   	 		and slsitu not in ('01','02','04','16') 
+  		 </if>
+  	</where>
+	order by slplaz
+
+  </select>
+  
+  <insert id="registrar" >
+ 	<selectKey keyProperty="slnume" resultType="Integer" order="BEFORE">
+    	select nextval('tsoli_id')
+  	</selectKey>
+ 	insert into TSOLI(slnume,slpers,slloca,slplaz,slsitu,slmoti,slusin)
+ 	values(#{slnume},#{slpers.plcodi},#{slloca},#{slplaz},#{slsitu.tbespe},#{slmoti},#{slusin});
+ 	
+ 	insert into TSOLID(sdnume,sdarti,sdcant,sdobse,sdprov) values 
+  	<foreach item="obj" collection="detalle" open="(" close=")"  separator="),("  >
+ 		#{slnume},#{obj.sdarti.artcod},#{obj.sdcant},#{obj.sdobse},#{obj.sdprov.procve}
+  	</foreach>
+  </insert>
+  
+  <update id="modificar">
+  		update TSOLI set slloca=#{slloca},slplaz=#{slplaz},slmoti=#{slmoti},slusmd=#{slusmd},slfemd=#{slfemd} where slnume=#{slnume};
+  		delete from TSOLID where sdnume=#{slnume};	
+  		insert into TSOLID(sdnume,sdarti,sdcant,sdobse,sdprov) values 
+  		<foreach item="obj" collection="detalle" open="(" close=")"  separator="),("  >
+ 		#{slnume},#{obj.sdarti.artcod},#{obj.sdcant},#{obj.sdobse},#{obj.sdprov.procve}
+  		</foreach>
+  </update>
+  
+  <delete id="eliminar">
+  		delete from TSOLI where slnume=#{slnume};
+  		delete from TSOLID where sdnume=#{slnume};		
+  </delete>
+   
+</mapper>

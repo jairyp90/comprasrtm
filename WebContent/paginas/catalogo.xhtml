@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="medida">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form>
+					<p:outputLabel value="#{ttabd.catalogo.tbiden}" rendered="false"/>
+					<p:outputLabel value="#{ttabd.catalogo.tbespe}" rendered="false"/>
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">#{ttabd.titulo}</f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in" id="panel">
+
+										<p:row>
+											<p:column colspan="2">
+												<p:outputLabel value="Datos de #{ttabd.titulo}" styleClass="subtitulo" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="desesp" id="mdesesp" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column >
+												<p:outputLabel value="Descripción" />
+											</p:column>
+											<p:column>
+												<p:inputText id="desesp" value="#{ttabd.catalogo.desesp}" size="40" required="true" label="Descripción" maxlength="30">
+													<f:validateLength minimum="1" maximum="30" /> 
+													<p:ajax  event="blur" update="mdesesp"  /> 
+												</p:inputText>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+											<p:column colspan="2">
+												<center>
+													<p:commandButton value="Guardar" actionListener="#{ttabd.guardar}" validateClient="true" update="dlg,panel"/>
+													<p:commandButton value="Cancelar"  action="/paginas/mantenerCatalogo" actionListener="#{ttabd.cargar}" immediate="true"  />
+												</center>
+												
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg" Height="40" resizable="false" modal="true" showEffect="fade" hideEffect="fade" closable="false">
+   													 <center>
+   													 <p:panelGrid styleClass="table-in" >		
+        											 	<p:row >
+															<p:column width="200">
+																<center>
+																	<p:outputLabel value="#{ttabd.mensaje}"/>
+																</center>	
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<hr></hr>
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column width="200">
+																<center>
+																	<p:commandButton value="Aceptar" action="/paginas/mantenerCatalogo" actionListener="#{ttabd.cargar}"/>
+																</center>
+															</p:column>
+													 	</p:row>        	
+        											 </p:panelGrid >
+        											 </center>						 
+												</p:dialog>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

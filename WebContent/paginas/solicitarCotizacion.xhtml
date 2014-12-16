@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form>
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<br />
+				<h:form id="solicitarCotizacion">
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">#{tcoti.titulo}</f:facet>
+
+						<p:row>
+							<p:column>
+								<p:toolbar>
+									<f:facet name="left">
+										<p:commandButton icon="ui-icon-mail-closed" 
+											title="Enviar correo" action='#{tcoti.solicitar}' />											
+																						
+										<p:commandButton id="Recargar" icon="ui-icon-refresh"
+											title="Recargar" update="solicitud"
+											actionListener='#{tcoti.cargar()}' />
+									</f:facet>
+									<f:facet name="right">
+										<h:commandLink title="Exportar excel">
+											<p:graphicImage name="/images/excel.png" width="24" />
+											<p:dataExporter type="xls" target="solicitud"
+												pageOnly="false" fileName="solicitud"
+												postProcessor="#{tcoti.postProcessXLS}" />
+										</h:commandLink>
+									</f:facet>
+								</p:toolbar>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in">
+										<p:row>
+											<p:column>
+												<div class="responsiveI">
+													<p:dataTable id="solicitud" var="solicitud"
+														value="#{tcoti.solicitudes}" paginator="true" rows="15"
+														sortMode="multiple" rowsPerPageTemplate="15,20,25,30,35"
+														paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+														rowKey="#{solicitud.slnume}"
+														selection="#{tcoti.solicitud}" selectionMode="single"
+														scrollable="true" filteredValue="#{tcoti.fsolicitudes}">
+														<!--frozenColumns="4">  -->
+
+														<p:column headerText="Número" sortBy="#{solicitud.slnume}"
+															width="50" filterBy="#{solicitud.slnume}"
+															filterMatchMode="contains" filterMaxLength="10">
+															<h:outputText value="#{solicitud.slnume}" />
+														</p:column>
+														<p:column headerText="Solicitante"
+															sortBy="#{solicitud.slpers.plnom1} #{solicitud.slpers.plnom2} #{solicitud.slpers.plapep} #{solicitud.slpers.plapem}"
+															width="200"
+															filterBy="#{solicitud.slpers.plnom1} #{solicitud.slpers.plnom2} #{solicitud.slpers.plapep} #{solicitud.slpers.plapem}"
+															filterMatchMode="contains" filterMaxLength="100">
+															<h:outputText
+																value="#{solicitud.slpers.plnom1} #{solicitud.slpers.plnom2} #{solicitud.slpers.plapep} #{solicitud.slpers.plapem}" />
+														</p:column>
+														<p:column headerText="Area"
+															sortBy="#{solicitud.slpers.plarea.desesp}" width="90"
+															filterBy="#{solicitud.slpers.plarea.desesp}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{solicitud.slpers.plarea.desesp}" />
+														</p:column>
+														<p:column headerText="Cargo"
+															sortBy="#{solicitud.slpers.plcarg.desesp}" width="120"
+															filterBy="#{solicitud.slpers.plcarg.desesp}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{solicitud.slpers.plcarg.desesp}" />
+														</p:column>
+														<p:column headerText="Local" sortBy="#{solicitud.slloca}"
+															width="90" filterBy="#{solicitud.slloca}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{solicitud.slloca}" />
+														</p:column>
+
+														<p:column headerText="Plazo" sortBy="#{solicitud.slplaz}"
+															width="50" filterBy="#{solicitud.slplaz}"
+															filterMatchMode="contains" filterMaxLength="10">
+															<h:outputText value="#{solicitud.slplaz}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="Situación"
+															sortBy="#{solicitud.slsitu.desesp}" width="100"
+															filterBy="#{solicitud.slsitu.desesp}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{solicitud.slsitu.desesp}" />
+														</p:column>
+
+														<p:column headerText="Usu. Reg."
+															sortBy="#{solicitud.slusin}" width="80"
+															filterBy="#{solicitud.slusin}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{solicitud.slusin}" />
+														</p:column>
+
+														<p:column headerText="F. Reg."
+															sortBy="#{solicitud.slfein}" width="60"
+															filterBy="#{solicitud.slfein}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{solicitud.slfein}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="Hora Reg."
+															sortBy="#{solicitud.slfein}" width="70"
+															filterBy="#{solicitud.slfein}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{solicitud.slfein}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="Usu. Mod."
+															sortBy="#{solicitud.slusmd}" width="80"
+															filterBy="#{solicitud.slusmd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{solicitud.slusmd}" />
+														</p:column>
+														<p:column headerText="F. Mod."
+															sortBy="#{solicitud.slfemd}" width="60"
+															filterBy="#{solicitud.slfemd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{solicitud.slfemd}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Mod."
+															sortBy="#{solicitud.slfemd}" width="70"
+															filterBy="#{solicitud.slfemd}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{solicitud.slfemd}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					
+					
+					
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

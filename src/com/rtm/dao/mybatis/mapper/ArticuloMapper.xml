@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.rtm.dao.mybatis.mapper.ArticuloMapper">
+ 
+ <resultMap type="TARTI" id="rmTARTIModel">
+   		<id column="ARTCOD" property="artcod"/>
+        <result column="ARTDES" property="artdes"/> 
+        <result column="ARTIMG" property="artimg"/>
+        <result column="ARTTIP" property="arttip.tbespe"/> 
+        <result column="ARTMAR" property="artmar.tbespe"/>
+        <result column="ARTMOD" property="artmod.tbespe"/> 
+        <result column="ARTMED" property="artmed.tbespe"/>      
+        <result column="DESMAR" property="artmar.desesp"/>
+        <result column="DESMOD" property="artmod.desesp"/> 
+        <result column="DESMED" property="artmed.desesp"/>
+        <result column="DESTIP" property="arttip.desesp"/> 
+        <result column="ARUSIN" property="arusin"/> 
+        <result column="ARFEIN" property="arfein"/> 
+        <result column="ARUSMD" property="arusmd"/> 
+        <result column="ARFEMD" property="arfemd"/> 
+ </resultMap>
+ 
+ <insert id="registrar" >
+ 	<selectKey keyProperty="artcod" resultType="String" order="BEFORE">
+    	select right('000000000' || nextval('tarti_id'),10)
+  	</selectKey>
+ 	insert into TARTI(artcod,artdes,artimg,arttip,artmar,artmod,artmed,arusin)
+ 	values(#{artcod},#{artdes},#{artimg},#{arttip.tbespe},#{artmar.tbespe},#{artmod.tbespe},#{artmed.tbespe},#{arusin})
+ </insert>
+ 
+ <select id="buscarArticulos"  resultMap="rmTARTIModel">
+  		select artcod,artdes,artimg,arttip,artmed,artmar,artmod,mdd.desesp DESMED,mrc.desesp DESMAR,mdl.desesp DESMOD,tpo.desesp DESTIP from tarti 
+  		left join ttabd as mdd on mdd.tbiden='UGMED' and mdd.tbespe=artmed 
+  		left join ttabd as mrc on mrc.tbiden='MARCA' and mrc.tbespe=artmar 
+  		left join ttabd as mdl on mdl.tbiden='MODEL' and mdl.tbespe=artmod 
+  		left join ttabd as tpo on tpo.tbiden='TIPOS'  and tpo.tbespe=arttip 
+  		<where>
+  		 <if test="artcod != null">
+   	 		AND UPPER(artcod) like #{artcod}
+  		 </if>
+  		 <if test="artdes != null">
+   	 		AND UPPER(artdes) like #{artdes}
+  		 </if>
+  		</where>
+  		order by artcod
+  </select>
+      
+</mapper>
