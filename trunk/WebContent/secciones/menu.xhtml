@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+<h:body>
+	<h:form>
+		<ui:composition>
+			<h:form>
+				<h:panelGrid columns="10">
+					<p:menubar>
+
+						<p:menuitem value="Inicio" action="/paginas/index"
+							icon="ui-icon-home" />
+
+						<p:submenu label="Maestros" icon="ui-icon-pencil" rendered="#{tusua.maestros}" >
+							<p:menuitem value="Artículo" action="/paginas/mantenerArticulo"
+								actionListener="#{tarti.cargar}" rendered="#{tusua.articulo}" />
+							<p:menuitem value="Proveedor" action="/paginas/mantenerProveedor"
+								actionListener="#{tprov.cargar}" rendered="#{tusua.proveedor}" />
+							<p:menuitem value="Tipo" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("TIPOS","Tipo")}' rendered="#{tusua.tipo}" />
+							<p:menuitem value="Marca" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("MARCA","Marca")}' rendered="#{tusua.marca}" />
+							<p:menuitem value="Modelo" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("MODEL","Modelo")}' rendered="#{tusua.modelo}" />
+							<p:menuitem value="U. Medida" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("UGMED","Unidad de Medida")}' rendered="#{tusua.umedida}" />
+							<p:menuitem value="Personal" action="/paginas/mantenerPersonal"
+								actionListener="#{tpers.cargar}" rendered="#{tusua.personal}"  />
+							<p:menuitem value="Area" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("AREAS","Area")}' rendered="#{tusua.area}" />
+							<p:menuitem value="Cargo" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("CARGO","Cargo")}' rendered="#{tusua.cargo}" />
+						</p:submenu>
+
+						<p:submenu label="Solicitud" icon="ui-icon-clipboard" rendered="#{tusua.solicitud}" >
+							<p:menuitem value="Gestión de Solicitud" action="/paginas/gestionSolicitud"
+								actionListener='#{tsoli.cargar("01")}' rendered="#{tusua.gestionSolicitud}" />
+							<p:menuitem value="Evaluar Solicitud" action="/paginas/gestionSolicitud"
+								actionListener='#{tsoli.cargar("02")}' rendered="#{tusua.evaluarSolicitud}"/>
+							<p:menuitem value="Seguimiento Solicitud" action="/paginas/gestionSolicitud"
+								actionListener='#{tsoli.cargar("00")}' rendered="#{tusua.seguimientoSolicitud}" />
+							<p:menuitem value="Actualizar Solicitud" action="/paginas/actualizarSolicitud"
+								actionListener='#{tcoti.cargar("05")}' rendered="#{tusua.actualizaSolicitud}"/>
+						</p:submenu>
+
+						<p:submenu label="Cotización" icon="ui-icon-document" rendered="#{tusua.cotizacion}">
+								<p:menuitem value="Solicitar Cotización" action="/paginas/solicitarCotizacion"
+								actionListener='#{tcoti.cargar("03")}' rendered="#{tusua.solicitaCotizacion}"  />
+						</p:submenu>
+
+						<p:submenu label="Orden de Compra" icon="ui-icon-copy" rendered="#{tusua.ordencompra}" >
+
+						</p:submenu>
+
+						<p:submenu label="Consultas" icon="ui-icon-search" rendered="#{tusua.consultas}" >
+
+						</p:submenu>
+
+						<p:submenu label="Reportes" icon="ui-icon-copy" rendered="#{tusua.reportes}" >
+
+						</p:submenu>
+						
+						<p:submenu label="Seguridad" icon="ui-icon-locked" rendered="#{tusua.seguridad}"  >
+							<p:menuitem value="Permisos" action="/paginas/permisos" rendered="#{tusua.permisos}" />
+							
+							<p:menuitem value="Modulos" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("TBMOD","Modulo")}' rendered="#{tusua.modulos}" />
+							
+							<p:menuitem value="Modulos - Opciones" action="/paginas/mantenerCatalogoReferencia"
+								actionListener='#{ttabd.cargar("TBMOD","TBOPC","Modulos - Opciones")}' rendered="#{tusua.modulosOpciones}" />	
+								
+							<p:menuitem value="Opciones" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("TBOPC","Opción")}' rendered="#{tusua.opciones}" />
+								
+							<p:menuitem value="Opciones - Sub Opciones" action="/paginas/mantenerCatalogoReferencia"
+								actionListener='#{ttabd.cargar("TBOPC","TBSOP","Opciones - Sub Opciones")}' rendered="#{tusua.opcionesSubopciones}" />
+								
+							<p:menuitem value="Sub Opciones" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("TBSOP","Sub Opción")}' rendered="#{tusua.subopciones}" />
+							
+							<p:menuitem value="Sub Opciones -Operaciones" action="/paginas/mantenerCatalogoReferencia"
+								actionListener='#{ttabd.cargar("TBSOP","TBOPR","Sub Opciones - Operaciones")}' rendered="#{tusua.subopcionesOperaciones}" />
+								
+							<p:menuitem value="Operaciones" action="/paginas/mantenerCatalogo"
+								actionListener='#{ttabd.cargar("TBOPR","Operación")}' rendered="#{tusua.operaciones}" />
+						</p:submenu>
+
+					</p:menubar>
+				</h:panelGrid>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<p:commandLink id="btnCerrarSesion" action="/paginas/login"
+							ajax="false" actionListener="#{tusua.cerrarSesion}" >
+							<h:outputText value="Cerrar Sesión" />
+						</p:commandLink>
+					</f:facet>
+					<f:facet name="right">
+						<p:outputLabel value="Usuario: #{tusua.usuario.usucve}"
+							styleClass="font-weight-bold" />
+					</f:facet>
+				</p:toolbar>
+
+			</h:form>
+		</ui:composition>
+	</h:form>
+</h:body>
+
+</html>

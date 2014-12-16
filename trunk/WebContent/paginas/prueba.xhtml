@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="prueba">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form>
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Prueba</f:facet>
+						<p:outputPanel id="detail" style="text-align:left;">
+							<p:panelGrid columns="2" columnClasses="label,value">
+								<h:outputText value="Asunto:" styleClass="subtitulo" />
+								<p:inputText value="#{tcoti.asunto}" size="100" />
+								<h:outputText value="Proveedor:" styleClass="subtitulo" />
+								<p:selectOneMenu id="proveedores" style="width:500px;">
+									<f:selectItem itemLabel="Seleccione" itemValue="01" />
+									<f:selectItems value="#{tcoti.proveedorSelector}" />
+									<f:ajax event="change" listener="#{tcoti.showReferencias}" />
+								</p:selectOneMenu>
+								<p:commandButton id="aplicar" value="Aplicar proveedor"
+									action="#{tcoti.aplicarProveedor}" />
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

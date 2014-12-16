@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rtm.dao.mybatis.mapper.SeguridadMapper">
+
+	<resultMap type="TUSUA" id="rmTUSUAModel">
+		<id 	column="PLUSUA" property="usucve" />	
+		<result column="PLCODI" property="tpers.plcodi" />
+		<result column="PLAPEP" property="tpers.plapep" />
+		<result column="PLAPEM" property="tpers.plapem" />
+		<result column="PLNOM1" property="tpers.plnom1" />
+		<result column="PLNOM2" property="tpers.plnom2" />
+		<result column="PLAREA" property="tpers.plarea.tbespe" />
+		<result column="DESARE" property="tpers.plarea.desesp" />
+		<result column="PLCARG" property="tpers.plcarg.tbespe" />
+		<result column="DESCAR" property="tpers.plcarg.desesp" />
+		<result column="PLJEFE" property="tpers.pljefe.plcodi" />
+	</resultMap>
+	
+	<resultMap type="TPEPE" id="rmTPEPEModel">
+		<result	column="ppusua" property="ppusua" />	
+		<result column="ppciac" property="ppciac" />
+		<result column="ppcmod" property="ppcmod" />
+		<result column="ppdmod" property="ppdmod" />
+		<result column="ppsmod" property="ppsmod" />
+		<result column="ppcopc" property="ppcopc" />
+		<result column="ppdopc" property="ppdopc" />
+		<result column="ppsopc" property="ppsopc" />
+		<result column="ppcsop" property="ppcsop" />
+		<result column="ppdsop" property="ppdsop" />
+		<result column="ppssop" property="ppssop" />
+		<result column="ppcopr" property="ppcopr" />
+		<result column="ppdopr" property="ppdopr" />
+		<result column="ppsopr" property="ppsopr" />
+		<result column="pptipo" property="pptipo" />
+	</resultMap>
+	
+		
+	<select id="getUsuario"  resultMap="rmTUSUAModel">
+		select plusua,plcodi,plapep,plapem,plnom1,plnom2,plarea,a.desesp DESARE,plcarg,s.desesp DESCAR,pljefe from tpers 
+		inner join ttabd a on a.tbiden='AREAS' and a.tbespe=plarea  
+		inner join ttabd s on s.tbiden='CARGO' and s.tbespe=plcarg 
+		where UPPER(plusua)=UPPER(TRIM(#{usucve}))
+	</select>
+	
+	<insert id="grabarPermisos" >
+		<foreach item="obj" collection="list">
+			<if test="obj.pptipo == '01' ">
+		 		  insert into tpepe (ppusua,ppciac,ppcmod,ppdmod,ppsmod,ppcopc,ppdopc,ppsopc,ppcsop,ppdsop,ppssop,ppcopr,ppdopr,ppsopr ) 
+		 		  values (#{obj.ppusua},#{obj.ppciac},#{obj.ppcmod},#{obj.ppdmod},#{obj.ppsmod},#{obj.ppcopc},#{obj.ppdopc},
+		 		  		  #{obj.ppsopc},#{obj.ppcsop},#{obj.ppdsop},#{obj.ppssop},#{obj.ppcopr},#{obj.ppdopr},#{obj.ppsopr});
+		 	</if>
+		 	<if test="obj.pptipo == '00' ">
+		 		  update tpepe set ppsmod=#{obj.ppsmod},ppsopc=#{obj.ppsopc},ppssop=#{obj.ppssop},ppsopr=#{obj.ppsopr}
+		 		  where ppusua=#{obj.ppusua} and ppciac=#{obj.ppciac} and ppcmod=#{obj.ppcmod} and 
+		 		  		ppcopc=#{obj.ppcopc} and ppcsop=#{obj.ppcsop} and ppcopr=#{obj.ppcopr};
+		 	</if>
+  		</foreach>
+	</insert>
+	
+</mapper>

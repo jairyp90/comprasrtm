@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="mantenerCatalogoE">
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<br />
+				<h:form id="mantenerCatalogoI">
+					<p:panelGrid columns="1" styleClass="table-out" id="panelPrincipal">
+						<f:facet name="header">Maestro de #{ttabd.titulo} </f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in">
+
+										<p:row>
+											<p:column>
+												<p:toolbar>
+													<f:facet name="left">
+														<p:commandButton id="Nuevo" icon="ui-icon-document"
+															action="/paginas/catalogo" title="Nuevo"
+															actionListener="#{ttabd.registrar}" />
+
+														<p:commandButton id="Modificar" icon="ui-icon-pencil"
+															action='#{ttabd.modificar}' title="Modificar"
+															update="dlg" />
+
+														<p:commandButton id="Eliminar" icon="ui-icon-trash"
+															action="#{ttabd.eliminar}" title="Eliminar"
+															update="catalogo,dlg">
+															<p:confirm header="Mensaje de Conformación"
+																message="¿Está seguro de eliminar el registro?"
+																icon="ui-icon-alert" />
+														</p:commandButton>
+
+														<p:commandButton id="Recargar" icon="ui-icon-refresh"
+															title="Recargar" update="catalogo"
+															actionListener='#{ttabd.cargar()}' />
+
+													</f:facet>
+													<f:facet name="right">
+														<h:commandLink title="Exportar excel">
+															<p:graphicImage name="/images/excel.png" width="24" />
+															<p:dataExporter type="xls" target="catalogo"
+																fileName="catalogos" pageOnly="false" 
+																postProcessor="#{ttabd.postProcessXLS}"/>
+														</h:commandLink>
+													</f:facet>
+												</p:toolbar>
+
+												<p:confirmDialog global="true" showEffect="fade"
+													hideEffect="fade">
+													<p:commandButton value="Si"
+														styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+													<p:commandButton value="No"
+														styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+												</p:confirmDialog>
+
+												<p:dialog id="dlg" header="Mensaje del Sistema"
+													widgetVar="dlg" Height="40" width="400" resizable="false"
+													modal="true" showEffect="fade" hideEffect="fade"
+													closable="false">
+													<center>
+														<p:panelGrid styleClass="table-in">
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:outputLabel value="#{ttabd.mensaje}" />
+																	</center>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column>
+																	<hr></hr>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:commandButton value="Aceptar"
+																			onclick="PF('dlg').hide();" />
+																	</center>
+																</p:column>
+															</p:row>
+														</p:panelGrid>
+													</center>
+												</p:dialog>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<div class="responsiveI">
+													<p:dataTable id="catalogo" var="catalogo"
+														value="#{ttabd.catalogos}" paginator="true" rows="15"
+														sortMode="multiple" rowsPerPageTemplate="15,20,25,30,35"
+														rowKey="#{catalogo.tbespe}" selection="#{ttabd.catalogo}"
+														selectionMode="single" scrollable="true"
+														filteredValue="#{ttabd.fcatalogos}"
+														paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" >
+														<!-- frozenColumns="2"> -->
+
+														<p:column headerText="Código" sortBy="#{catalogo.tbespe}"
+															width="80" filterBy="#{catalogo.tbespe}"
+															filterMatchMode="contains" filterMaxLength="6">
+															<h:outputText value="#{catalogo.tbespe}" />
+														</p:column>
+														<p:column headerText="Descripción"
+															sortBy="#{catalogo.desesp}" width="360"
+															filterBy="#{catalogo.desesp}" filterMatchMode="contains"
+															filterMaxLength="30">
+															<h:outputText value="#{catalogo.desesp}" />
+														</p:column>
+														<p:column headerText="Usu. Reg."
+															sortBy="#{catalogo.tbusin}" width="70"
+															filterBy="#{catalogo.tbusin}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{catalogo.tbusin}" />
+														</p:column>
+														<p:column headerText="F. Reg." sortBy="#{catalogo.tbfein}"
+															width="60" filterBy="#{catalogo.tbfein}"
+															filterMatchMode="contains" filterMaxLength="10">
+															<h:outputText value="#{catalogo.tbfein}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Reg."
+															sortBy="#{catalogo.tbfein}" width="70"
+															filterBy="#{catalogo.tbfein}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{catalogo.tbfein}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Usu. Mod."
+															sortBy="#{catalogo.tbusmd}" width="80"
+															filterBy="#{catalogo.tbusmd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{catalogo.tbusmd}" />
+														</p:column>
+														<p:column headerText="F. Mod." sortBy="#{catalogo.tbfemd}"
+															width="60" filterBy="#{catalogo.tbfemd}"
+															filterMatchMode="contains" filterMaxLength="10">
+															<h:outputText value="#{catalogo.tbfemd}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Mod."
+															sortBy="#{catalogo.tbfemd}" width="70"
+															filterBy="#{catalogo.tbfemd}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{catalogo.tbfemd}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

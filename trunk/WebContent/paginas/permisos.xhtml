@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form>
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form id="permisos">
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Permisos</f:facet>
+						
+						<p:row>
+							<p:column>
+								<p:toolbar>
+									<f:facet name="left">
+										<p:commandButton action="#{tsegu.grabarPermisos}"
+											update="dlg"
+											icon="ui-icon-disk" title="Grabar"  />
+		
+										<p:dialog id="dlg" header="Mensaje del Sistema"
+											widgetVar="dlg" Height="40" resizable="false" modal="true"
+											showEffect="fade" hideEffect="fade" closable="false">
+											<center>
+												<p:panelGrid styleClass="table-in">
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:outputLabel value="#{tsegu.mensaje}" />
+															</center>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column>
+															<hr></hr>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:commandButton id="btnOK" value="Aceptar"
+																	onclick="PF('dlg').hide();" />
+															</center>
+														</p:column>
+													</p:row>
+												</p:panelGrid>
+											</center>
+										</p:dialog>
+									</f:facet>
+								</p:toolbar>
+							</p:column>
+						</p:row>
+
+						<p:panelGrid styleClass="table-in-center">
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Personal" />
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="personal" value="#{tsegu.personal.plusua}"
+										filter="true" filterMatchMode="startsWith"
+										style="width:233px;">
+										<f:selectItem itemLabel="Seleccione" itemValue="vacio" />
+										<f:selectItems value="#{tsegu.personales}" var="personal"
+											itemLabel="#{personal.plapep} #{personal.plapem} #{personal.plnom1}"
+											itemValue="#{personal.plusua}" />
+										<p:ajax event="change" update="listado" listener="#{tsegu.getPermisos}" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column colspan="2">
+									<p:accordionPanel multiple="true" id="listado">
+										<p:tab title="Compras">
+											<h:panelGrid columns="1" cellpadding="10">
+
+												<p:tree value="#{tsegu.root}" var="doc"
+													selection="#{tsegu.selectedNodes}"
+													selectionMode="checkbox" >
+
+													<p:treeNode type="opcion" >
+														<h:outputText value="#{doc.ppdopc}" />
+													</p:treeNode>
+
+													<p:treeNode type="subopcion" >
+														<h:outputText value="#{doc.ppdsop}" />
+													</p:treeNode>
+
+													<p:treeNode type="operacion" >
+														<h:outputText value="#{doc.ppdopr}" />
+													</p:treeNode>
+
+												</p:tree>
+
+											</h:panelGrid>
+										</p:tab>
+									</p:accordionPanel>
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

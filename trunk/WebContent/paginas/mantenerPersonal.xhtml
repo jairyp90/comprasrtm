@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form >
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<br />
+				<h:form id="mantenerPersonal">
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Maestro de Personal</f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in">
+										<p:row>
+											<p:column>
+												<p:toolbar>
+													<f:facet name="left">
+														<p:commandButton id="Nuevo" icon="ui-icon-document"
+															action="/paginas/personal" title="Nuevo"
+															actionListener="#{tpers.registrar}" />
+
+														<p:commandButton id="Modificar" icon="ui-icon-pencil"
+															action='#{tpers.modificar}' title="Modificar"
+															update="dlg" />
+
+														<p:commandButton id="Eliminar" icon="ui-icon-trash"
+															action="#{tpers.eliminar}" title="Eliminar"
+															update="personal,dlg">
+															<p:confirm header="Mensaje de Conformación"
+																message="¿Está seguro de eliminar el registro?"
+																icon="ui-icon-alert" />
+														</p:commandButton>
+
+														<p:commandButton id="Recargar" icon="ui-icon-refresh"
+															title="Recargar" update="personal"
+															actionListener='#{tpers.cargar()}' />
+													</f:facet>
+													<f:facet name="right">
+														<h:commandLink title="Exportar excel">
+															<p:graphicImage name="/images/excel.png" width="24" />
+															<p:dataExporter type="xls" target="personal"
+																	fileName="personal" pageOnly="false" 
+																	postProcessor="#{tpers.postProcessXLS}"/>
+														</h:commandLink>
+													</f:facet>
+												</p:toolbar>
+
+												<p:confirmDialog global="true" showEffect="fade"
+													hideEffect="fade">
+													<p:commandButton value="Si"
+														styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+													<p:commandButton value="No"
+														styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+												</p:confirmDialog>
+
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg"
+													Height="40" width="400" resizable="false" modal="true"
+													showEffect="fade" hideEffect="fade" closable="false">
+													<center>
+														<p:panelGrid styleClass="table-in">
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:outputLabel value="#{tpers.mensaje}" />
+																	</center>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column>
+																	<hr></hr>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:commandButton value="Aceptar"
+																			onclick="PF('dlg').hide();" />
+																	</center>
+																</p:column>
+															</p:row>
+														</p:panelGrid>
+													</center>
+												</p:dialog>
+
+											</p:column>
+										</p:row>
+
+
+										<p:row>
+											<p:column>
+												<div class="responsiveI">
+													<p:dataTable id="personal" var="personal"
+														value="#{tpers.personales}" paginator="true" rows="15"
+														sortMode="multiple" rowsPerPageTemplate="15,20,25,30,35"
+														rowKey="#{personal.plcodi}"
+														selection="#{tpers.personal}" selectionMode="single"
+														scrollable="true" filteredValue="#{tpers.fpersonales}">
+														<!--frozenColumns="3">  --> 
+														<p:column headerText="Código" sortBy="#{personal.plcodi}"
+															width="70" filterBy="#{personal.plcodi}"
+															filterMatchMode="contains" filterMaxLength="11">
+															<h:outputText value="#{personal.plcodi}" />
+														</p:column>
+														<p:column headerText="Usuario" sortBy="#{personal.plusua}"
+															width="70" filterBy="#{personal.plusua}"
+															filterMatchMode="contains" filterMaxLength="11">
+															<h:outputText value="#{personal.plusua}" />
+														</p:column>
+														<p:column headerText="Nombres y Apellidos" 
+															sortBy="#{personal.plnom1} #{personal.plnom2} #{personal.plapep} #{personal.plapem}"
+															width="200" filterBy="#{personal.plnom1} #{personal.plnom2} #{personal.plapep} #{personal.plapem}"
+															filterMatchMode="contains" filterMaxLength="100">
+															<h:outputText value="#{personal.plnom1} #{personal.plnom2} #{personal.plapep} #{personal.plapem}" />
+														</p:column>
+														<p:column headerText="Area"
+															sortBy="#{personal.plarea.desesp}" width="90"
+															filterBy="#{personal.plarea.desesp}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{personal.plarea.desesp}" />
+														</p:column>
+														<p:column headerText="Cargo"
+															sortBy="#{personal.plcarg.desesp}" width="120"
+															filterBy="#{personal.plcarg.desesp}"
+															filterMatchMode="contains" filterMaxLength="30">
+															<h:outputText value="#{personal.plcarg.desesp}" />
+														</p:column>
+														<p:column headerText="Jefe" 
+															sortBy="#{personal.pljefe.plnom1} #{personal.pljefe.plnom2} #{personal.pljefe.plapep} #{personal.pljefe.plapem}"
+															width="200" filterBy="#{personal.pljefe.plnom1} #{personal.pljefe.plnom2} #{personal.pljefe.plapep} #{personal.pljefe.plapem}"
+															filterMatchMode="contains" filterMaxLength="100">
+															<h:outputText value="#{personal.pljefe.plnom1} #{personal.pljefe.plnom2} #{personal.pljefe.plapep} #{personal.pljefe.plapem}" />
+														</p:column>
+														<p:column headerText="Usu. Reg."
+															sortBy="#{personal.plusin}" width="70"
+															filterBy="#{personal.plusin}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{personal.plusin}" />
+														</p:column>
+														<p:column headerText="F. Reg."
+															sortBy="#{personal.plfein}" width="60"
+															filterBy="#{personal.plfein}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{personal.plfein}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Reg."
+															sortBy="#{personal.plfein}" width="70"
+															filterBy="#{personal.plfein}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{personal.plfein}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Usu. Mod."
+															sortBy="#{personal.plusmd}" width="80"
+															filterBy="#{personal.plusmd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{personal.plusmd}" />
+														</p:column>
+														<p:column headerText="F. Mod."
+															sortBy="#{personal.plfemd}" width="60"
+															filterBy="#{personal.plfemd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{personal.plfemd}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Mod."
+															sortBy="#{personal.plfemd}" width="70"
+															filterBy="#{personal.plfemd}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{personal.plfemd}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form>
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<br />
+				<h:form id="actualizarSolicitud">
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">#{tcoti.titulo}
+							<p:messages id="mensajePrime" />
+						</f:facet>
+
+						<p:row>
+							<p:column>
+								<div class="responsive">
+								<p:toolbar>
+										<f:facet name="left">
+											<p:commandButton id="RecargarSeguimiento" icon="ui-icon-refresh"
+															title="Recargar" update="seguimientoData"
+															actionListener='#{tcoti.cargar()}' />
+										</f:facet>
+									</p:toolbar>
+								
+									<p:dataGrid var="solicitud" value="#{tcoti.solicitudes}"
+										columns="#{tcoti.columnas}" layout="grid"
+										rows="#{tcoti.filas}" paginator="true" id="seguimientoData"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+										rowsPerPageTemplate="6,12,16,20">
+
+										<p:panel header="#{solicitud.slnume}"
+											style="text-align:center;">
+											<h:panelGrid columns="2" columnClasses="label,value"
+												style="width:100%;text-align:left;">
+
+												<h:outputText value="Número: " />
+												<h:outputText value="#{solicitud.slnume}" />
+												<h:outputText value="Solicitante: " />
+												<h:outputText
+													value="#{solicitud.slpers.plnom1} #{solicitud.slpers.plapep}" />
+												<h:outputText value="Plazo:" />
+												<h:outputText value="#{solicitud.slplaz}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputText>
+												<h:outputText value="Estado: " />
+												<h:outputText value="#{solicitud.slsitu.desesp}" />
+
+
+												<p:commandLink update="solicitudDialog,detalle"
+													actionListener="#{tcoti.ver(solicitud)}"
+													title="Ver Detalle">
+													<h:outputText styleClass="ui-icon ui-icon-search"
+														style="margin:0 auto;" />
+												</p:commandLink>
+
+												<p:commandLink update="editarDialogo"
+													actionListener="#{tcoti.showEdit(solicitud)}"
+													title="Editar">
+													<h:outputText styleClass="ui-icon ui-icon-pencil"
+														style="margin:0 auto;" />
+
+												</p:commandLink>
+
+												<p:dialog id="editarDialogo" modal="false" resizable="false"
+													header="Editar Solicitud" widgetVar="editarDialogo"
+													width="300">
+													<p:outputPanel id="detailEdit" style="text-align:left;">
+														<p:panelGrid columns="2" columnClasses="label,value">
+															<h:outputText value="Número:" styleClass="subtitulo" />
+															<h:outputText value="#{solicitud.slnume}" />
+															<h:outputText value="Estado: " styleClass="subtitulo" />
+															<h:outputText value="#{solicitud.slsitu.desesp}" />
+
+															<h:outputText value="Cambiar: " styleClass="subtitulo" />
+															<p:selectOneMenu id="slsituCambiar" required="true"
+																label="Situación" style="width:135px;"
+																value="#{solicitud.slsitu.tbespe}">
+																<f:selectItem itemLabel="Seleccione" itemValue="" />
+																<f:selectItem itemLabel="Aprobado por J.A."
+																	itemValue="03" />
+																<f:selectItem itemLabel="Cotizando" itemValue="05" />
+																<f:selectItem itemLabel="Con Cotización" itemValue="06" />
+																<f:selectItem itemLabel="Con Sugerencias" itemValue="07" />
+																<f:selectItem itemLabel="Evaluando Cotización"
+																	itemValue="08" />
+																<f:selectItem itemLabel="Aprobado por G.C."
+																	itemValue="09" />
+																<f:selectItem itemLabel="Denegado por G.C."
+																	itemValue="10" />
+																<f:selectItem itemLabel="Con Orden de Compra"
+																	itemValue="11" />
+																<f:selectItem itemLabel="Evaluando Orden de Compra"
+																	itemValue="12" />
+																<f:selectItem itemLabel="O.C Aprobada por G.C."
+																	itemValue="13" />
+																<f:selectItem itemLabel="O.C Denegado por G.C."
+																	itemValue="14" />
+																<f:selectItem itemLabel="En Proveedor" itemValue="15" />
+																<f:selectItem itemLabel="Entregado" itemValue="16" />
+																<p:ajax event="change" update="mslsituCambiar" />
+															</p:selectOneMenu>
+
+															<p:commandButton id="actualizar" value="Grabar"
+																validateClient="true"
+																actionListener="#{tcoti.actualizar}" />
+
+															<p:message for="slsituCambiar" id="mslsituCambiar" />
+														</p:panelGrid>
+													</p:outputPanel>
+												</p:dialog>
+
+												<p:dialog id="solicitudDialog" modal="true"
+													resizable="false" header="Detalle de la Solicitud"
+													widgetVar="solicitudDialog" width="900">
+													<p:outputPanel id="detail" style="text-align:left;">
+														<p:panelGrid columns="2" columnClasses="label,value">
+															<h:outputText value="Número:" styleClass="subtitulo" />
+															<h:outputText value="#{solicitud.slnume}" />
+															<h:outputText value="Motivo:" styleClass="subtitulo" />
+															<h:outputText value="#{tcoti.solicitud.slmoti}" />
+															<h:outputText value="Local:" styleClass="subtitulo" />
+															<h:outputText value="#{tcoti.solicitud.slloca}" />
+															<h:outputText value="Plazo:" styleClass="subtitulo" />
+															<h:outputText value="#{tcoti.solicitud.slplaz}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText>
+															<h:outputText value="Solicitante:" styleClass="subtitulo" />
+															<h:outputText
+																value="#{tcoti.solicitud.slpers.plnom1} #{tcoti.solicitud.slpers.plnom2} #{tcoti.solicitud.slpers.plapep} #{tcoti.solicitud.slpers.plapem}" />
+															<h:outputText value="Area:" styleClass="subtitulo" />
+															<h:outputText
+																value="#{tcoti.solicitud.slpers.plarea.desesp}" />
+															<h:outputText value="Cargo:" styleClass="subtitulo" />
+															<h:outputText
+																value="#{tcoti.solicitud.slpers.plcarg.desesp}" />
+															<h:outputText value="Observación:" styleClass="subtitulo" />
+															<h:outputText value="#{tcoti.solicitud.slobse}" />
+														</p:panelGrid>
+													</p:outputPanel>
+
+													<p:panelGrid>
+														<p:row>
+															<p:column>
+																<div style="width: 1220px; height: 100%">
+																	<p:dataTable id="detalle" var="detalle"
+																		value="#{tcoti.detalles}" resizableColumns="true"
+																		liveResize="true">
+																		<f:facet name="header">Detalle de la Solicitud</f:facet>
+																		<p:column headerText="Cod.Art" width="10%">
+																			<h:outputText value="#{detalle.sdarti.artcod}" />
+																		</p:column>
+																		<p:column headerText="Descripción" width="30%">
+																			<h:outputText value="#{detalle.sdarti.artdes}" />
+																		</p:column>
+																		<p:column headerText="Cantidad" width="5%">
+																			<h:outputText value="#{detalle.sdcant}" />
+																		</p:column>
+																		<p:column headerText="Motivo" width="30%">
+																			<h:outputText value="#{detalle.sdobse}" />
+																		</p:column>
+																		<p:column headerText="Proveedor" width="20%">
+																			<h:outputText value="#{detalle.sdprov.pronom}" />
+																		</p:column>
+																	</p:dataTable>
+																</div>
+															</p:column>
+														</p:row>
+
+													</p:panelGrid>
+												</p:dialog>
+
+											</h:panelGrid>
+										</p:panel>
+
+									</p:dataGrid>
+								</div>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

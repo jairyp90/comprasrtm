@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form >
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<br />
+				<h:form id="mantenerProveedor">
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">Maestro de Proveedores</f:facet>
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in">
+										<p:row>
+											<p:column>
+												<p:toolbar>
+													<f:facet name="left">
+														<p:commandButton id="Nuevo" icon="ui-icon-document"
+															action="/paginas/proveedor" title="Nuevo"
+															actionListener="#{tprov.registrar}" />
+
+														<p:commandButton id="Modificar" icon="ui-icon-pencil"
+															action='#{tprov.modificar}' title="Modificar"
+															update="dlg" />
+
+														<p:commandButton id="Eliminar" icon="ui-icon-trash"
+															action="#{tprov.eliminar}" title="Eliminar"
+															update="proveedor,dlg">
+															<p:confirm header="Mensaje de Conformación"
+																message="¿Está seguro de eliminar el registro?"
+																icon="ui-icon-alert" />
+														</p:commandButton>
+
+														<p:commandButton id="Recargar" icon="ui-icon-refresh"
+															title="Recargar" update="proveedor"
+															actionListener='#{tprov.cargar()}' />
+
+													</f:facet>
+													<f:facet name="right">
+														<h:commandLink title="Exportar excel">
+															<p:graphicImage name="/images/excel.png" width="24" />
+															<p:dataExporter type="xls" target="proveedor"
+																	fileName="proveedores" pageOnly="false" 
+																	postProcessor="#{tprov.postProcessXLS}"/>
+														</h:commandLink>
+													</f:facet>
+												</p:toolbar>
+
+												<p:confirmDialog global="true" showEffect="fade"
+													hideEffect="fade">
+													<p:commandButton value="Si"
+														styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+													<p:commandButton value="No"
+														styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+												</p:confirmDialog>
+
+												<p:dialog id="dlg" header="Mensaje del Sistema" widgetVar="dlg"
+													Height="40" width="400" resizable="false" modal="true"
+													showEffect="fade" hideEffect="fade" closable="false">
+													<center>
+														<p:panelGrid styleClass="table-in">
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:outputLabel value="#{tprov.mensaje}" />
+																	</center>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column>
+																	<hr></hr>
+																</p:column>
+															</p:row>
+															<p:row>
+																<p:column width="200">
+																	<center>
+																		<p:commandButton value="Aceptar"
+																			onclick="PF('dlg').hide();" />
+																	</center>
+																</p:column>
+															</p:row>
+														</p:panelGrid>
+													</center>
+												</p:dialog>
+
+											</p:column>
+										</p:row>
+
+
+										<p:row>
+											<p:column>
+												<div class="responsiveI">
+													<p:dataTable id="proveedor" var="proveedor"
+														value="#{tprov.proveedores}" paginator="true" rows="15"
+														sortMode="multiple" rowsPerPageTemplate="15,20,25,30,35"
+														rowKey="#{proveedor.procve}"
+														selection="#{tprov.proveedor}" selectionMode="single"
+														scrollable="true" filteredValue="#{tprov.fproveedores}">
+														<!--frozenColumns="3">  --> 
+														<p:column headerText="RUC" sortBy="#{proveedor.proruc}"
+															width="70" filterBy="#{proveedor.proruc}"
+															filterMatchMode="contains" filterMaxLength="11">
+															<h:outputText value="#{proveedor.proruc}" />
+														</p:column>
+														<p:column headerText="Nombre" sortBy="#{proveedor.pronom}"
+															width="200" filterBy="#{proveedor.pronom}"
+															filterMatchMode="contains" filterMaxLength="50">
+															<h:outputText value="#{proveedor.pronom}" />
+														</p:column>
+														<p:column headerText="Dirección"
+															sortBy="#{proveedor.prodir}" width="260"
+															filterBy="#{proveedor.prodir}" filterMatchMode="contains"
+															filterMaxLength="100">
+															<h:outputText value="#{proveedor.prodir}" />
+														</p:column>
+														<p:column headerText="Teléfono 1"
+															sortBy="#{proveedor.prote1}" width="90"
+															filterBy="#{proveedor.prote1}" filterMatchMode="contains"
+															filterMaxLength="15">
+															<h:outputText value="#{proveedor.prote1}" />
+														</p:column>
+														<p:column headerText="Teléfono 2"
+															sortBy="#{proveedor.prote2}" width="80"
+															filterBy="#{proveedor.prote2}" filterMatchMode="contains"
+															filterMaxLength="15">
+															<h:outputText value="#{proveedor.prote2}" />
+														</p:column>
+														<p:column headerText="Correo" sortBy="#{proveedor.prmail}"
+															width="150" filterBy="#{proveedor.prmail}"
+															filterMatchMode="contains" filterMaxLength="50">
+															<h:outputText value="#{proveedor.prmail}" />
+														</p:column>
+														<p:column headerText="Usu. Reg."
+															sortBy="#{proveedor.prusin}" width="70"
+															filterBy="#{proveedor.prusin}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{proveedor.prusin}" />
+														</p:column>
+														<p:column headerText="F. Reg."
+															sortBy="#{proveedor.prfein}" width="60"
+															filterBy="#{proveedor.prfein}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{proveedor.prfein}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Reg."
+															sortBy="#{proveedor.prfein}" width="70"
+															filterBy="#{proveedor.prfein}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{proveedor.prfein}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Usu. Mod."
+															sortBy="#{proveedor.prusmd}" width="80"
+															filterBy="#{proveedor.prusmd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{proveedor.prusmd}" />
+														</p:column>
+														<p:column headerText="F. Mod."
+															sortBy="#{proveedor.prfemd}" width="60"
+															filterBy="#{proveedor.prfemd}" filterMatchMode="contains"
+															filterMaxLength="10">
+															<h:outputText value="#{proveedor.prfemd}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column headerText="Hora Mod."
+															sortBy="#{proveedor.prfemd}" width="70"
+															filterBy="#{proveedor.prfemd}" filterMatchMode="contains"
+															filterMaxLength="8">
+															<h:outputText value="#{proveedor.prfemd}">
+																<f:convertDateTime type="date" pattern="HH:mm:ss" />
+															</h:outputText>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

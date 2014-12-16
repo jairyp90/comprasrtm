@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form>
+		<ui:composition template="/plantillas/plantilla.xhtml">
+			<ui:define name="body">
+				<h:form id="catalogoReferencia" >
+					<br />
+					<p:panelGrid columns="1" styleClass="table-out">
+						<f:facet name="header">#{ttabd.titulo}</f:facet>
+
+						<p:row>
+							<p:column>
+								<p:toolbar>
+									<f:facet name="left">
+										<p:commandButton action="#{ttabd.grabar}"
+											validateClient="true" update="dlg,catalogoReferencia"
+											icon="ui-icon-disk" title="Grabar" />
+										<p:dialog id="dlg" header="Mensaje del Sistema"
+											widgetVar="dlg" Height="40" resizable="false" modal="true"
+											showEffect="fade" hideEffect="fade" closable="false">
+											<center>
+												<p:panelGrid styleClass="table-in">
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:outputLabel value="#{ttabd.mensaje}" />
+															</center>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column>
+															<hr></hr>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column width="200">
+															<center>
+																<p:commandButton id="btnOk" value="Aceptar"
+																	onclick="PF('dlg').hide();" />
+															</center>
+														</p:column>
+													</p:row>
+												</p:panelGrid>
+											</center>
+										</p:dialog>
+									</f:facet>
+								</p:toolbar>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<center>
+									<p:panelGrid styleClass="table-in" id="panel">
+
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="catalogo" id="mcatalogo" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Catalogo" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="catalogo" required="true"
+													label="Catalogo" filter="true" 
+													filterMatchMode="startsWith"
+													value="#{ttabd.catalogo.tbespe}"  style="width:228px;">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{ttabd.catalogos}" var="catalogo" 
+														itemLabel="#{catalogo.desesp}" itemValue="#{catalogo.tbespe}" />
+													<p:ajax event="change" update="mcatalogo,detalle"
+														listener="#{ttabd.showReferencias}"  />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="2">
+												<p:message for="referencia" id="mreferencia" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Referencia" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="referencia" required="true"
+													label="Referencia" filter="true"
+													filterMatchMode="startsWith" 
+													value="#{ttabd.referencia.tbespe}"  style="width:228px;">
+													<f:selectItems value="#{ttabd.referencias}"  var="referencia" 
+														itemLabel="#{referencia.desesp}" itemValue="#{referencia.tbespe}" />
+													<p:ajax event="change" update="mreferencia" />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="2">
+												<p:commandButton value="Agregar" action="#{ttabd.agregar}"
+													validateClient="true" update="catalogoReferencia,detalle" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column colspan="2">
+												<div style="width: 300px;">
+													<p:dataTable id="detalle" var="detalle"
+														value="#{ttabd.detalles}" scrollable="true">
+														<p:column headerText="Quitar" width="40">
+															<p:commandButton id="Eliminar" icon="ui-icon-closethick"
+																action="#{ttabd.quitar(detalle)}" update="detalle"
+																style="height:20px;" />
+														</p:column>
+														<p:column headerText="Descripción" width="200">
+															<h:outputText value="#{detalle.desesp}" />
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+								</center>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:form>
+</h:body>
+</html>

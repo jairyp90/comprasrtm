@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rtm.dao.mybatis.mapper.PersonalMapper">
+
+	<resultMap type="TPERS" id="rmTPERSModel">
+		<id column="plcodi" property="plcodi" />
+		<result column="plapep" property="plapep" />
+		<result column="plapem" property="plapem" />
+		<result column="plnom1" property="plnom1" />
+		<result column="plnom2" property="plnom2" />
+		<result column="plusua" property="plusua" />
+		<result column="pljefe" property="pljefe.plcodi"/>
+		<result column="apjefe" property="pljefe.plapep"/>
+		<result column="amjefe" property="pljefe.plapem"/>
+		<result column="n1jefe" property="pljefe.plnom1"/>
+		<result column="n2jefe" property="pljefe.plnom2"/>
+		<result column="plarea" property="plarea.tbespe"/>
+        <result column="plcarg" property="plcarg.tbespe"/>
+		<result column="desare" property="plarea.desesp"/>
+        <result column="descar" property="plcarg.desesp"/>
+		<result column="plusin" property="plusin" />
+		<result column="plfein" property="plfein" />
+		<result column="plusmd" property="plusmd" />
+		<result column="plfemd" property="plfemd" />
+	</resultMap>
+	
+	<insert id="registrar" >
+ 		<selectKey keyProperty="plcodi" resultType="String" order="BEFORE">
+    		select right('000000000' || nextval('tpers_id'),10)
+  		</selectKey>
+ 		insert into TPERS(plcodi,plnom1,plnom2,plapep,plapem,plusua,plarea,plcarg,pljefe,plusin)
+ 		<if test="pljefe.plcodi != 'vacio' ">
+ 			values(#{plcodi},#{plnom1},#{plnom2},#{plapep},#{plapem},#{plusua},#{plarea.tbespe},#{plcarg.tbespe},#{pljefe.plcodi},#{plusin})
+ 		</if>
+ 		<if test="pljefe.plcodi == 'vacio' ">
+ 			values(#{plcodi},#{plnom1},#{plnom2},#{plapep},#{plapem},#{plusua},#{plarea.tbespe},#{plcarg.tbespe},#{plcodi},#{plusin})
+ 		</if>
+    </insert>
+    
+    <update id="modificar">
+    	<if test="pljefe.plcodi != 'vacio' ">
+    		update TPERS set plnom1=#{plnom1},plnom2=#{plnom2},plapep=#{plapep},plapem=#{plapem},plusua=#{plusua},plarea=#{plarea.tbespe},plcarg=#{plcarg.tbespe},pljefe=#{pljefe.plcodi},plusmd=#{plusmd},plfemd=#{plfemd} where plcodi=#{plcodi}
+    	</if>
+    	<if test="pljefe.plcodi == 'vacio' ">
+    		update TPERS set plnom1=#{plnom1},plnom2=#{plnom2},plapep=#{plapep},plapem=#{plapem},plusua=#{plusua},plarea=#{plarea.tbespe},plcarg=#{plcarg.tbespe},pljefe=#{plcodi},plusmd=#{plusmd},plfemd=#{plfemd} where plcodi=#{plcodi}
+    	</if>
+    </update>
+
+</mapper>

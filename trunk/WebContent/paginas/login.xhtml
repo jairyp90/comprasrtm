@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet library="css" name="style.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+	<title><h:outputText value="Tecnimotors" /></title>
+</h:head>
+<h:body>
+
+	<div id="container">
+		<h:form id="login">
+			<div class="login">LOGIN</div>
+			<div class="username-text">Usuario</div>
+			<div class="password-text">Contraseña</div>
+			<div class="username-field">
+				<h:inputText value="#{tusua.usuario.usucve}" maxlength="10" />
+			</div>
+			<div class="password-field">
+				<h:inputSecret value="#{tusua.usuario.usucon}" maxlength="10" />
+			</div>
+			<p:commandButton id="btnEntrar" action="#{tusua.validar}"
+				value="Ingresar" styleClass="btnEntrar" />
+			<br />
+			<br />
+			<br />
+			<p:messages id="mensaje" autoUpdate="true" />
+		</h:form>
+	</div>
+
+	<div id="footer">Representaciones Tecnimotors E.I.R.L.</div>
+</h:body>
+</html>
+

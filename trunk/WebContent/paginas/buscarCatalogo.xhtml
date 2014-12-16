@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><h:outputText value="Buscar #{ttabd.titulo}" /></title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+</h:head>
+
+<h:body>
+	<h:form id="buscarMedida">
+		<p:panelGrid styleClass="table-in" id="pnlBuscarMeduida">
+			<p:row>
+				<p:column colspan="3">
+					<p:outputLabel value="Criterios de Busqueda" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel value="Código" />
+				</p:column>
+				<p:column colspan="2">
+					<p:outputLabel value="Descripción" />
+				</p:column>
+			</p:row>
+
+
+
+			<p:row>
+				<p:column>
+					<p:inputText id="txtCodigo" value="#{ttabd.bcatalogo.tbespe}"
+						size="10" maxlength="6"/>
+				</p:column>
+				<p:column>
+					<p:inputText id="txtDescripcion" value="#{ttabd.bcatalogo.desesp}"
+						size="60" maxlength="30"/>
+				</p:column>
+				<p:column>
+					<p:commandButton id="btnBuscar" value="Buscar"
+						actionListener="#{ttabd.buscar}" update="catalogoMedida" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column colspan="3">
+					<p:dataTable id="catalogoMedida" var="catalogo"
+						value="#{ttabd.catalogos}" paginator="true" rows="10"
+						rowsPerPageTemplate="10,15,20" rowKey="#{catalogo.tbespe}" 
+						selection="#{ttabd.catalogo}" >
+						<p:column headerText="Código" sortBy="#{catalogo.tbespe}"
+							width="60">
+							<h:outputText value="#{catalogo.tbespe}" />
+						</p:column>
+						<p:column headerText="Descripción" sortBy="#{catalogo.desesp}"
+							width="250">
+							<h:outputText value="#{catalogo.desesp}" />
+						</p:column>
+						<p:column selectionMode="single" headerText="Seleccione" width="60" style="text-align: center"/>
+					</p:dataTable>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column colspan="3" style="text-align: center;">
+					<p:commandButton value="Aceptar" id="btnAceptar"
+						actionListener="#{ttabd.aceptar}" />
+					<p:commandButton value="Cancelar" id="btnCancelar"
+						actionListener="#{ttabd.closeBuscar}" immediate="true" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+	</h:form>
+</h:body>
+</html>
